@@ -49,15 +49,37 @@ const cartModalClose = () => {
   enableScroll();
 };
 
-subheaderCart.addEventListener("click", cartModalOpen);
+// get data from server
 
-cartOverlay.addEventListener("click", (event) => {
-  const target = event.target;
-
-  if (
-    target.classList.contains("cart__btn-close") ||
-    target.matches(".cart-overlay")
-  ) {
-    cartModalClose();
+const getData = async () => {
+  const data = await fetch("db.json");
+  if (data.ok) {
+    return data.json();
+  } else {
+    throw new Error(
+      `Данные не были получены, ошибка ${data.status} ${data.statusText}`
+    );
   }
+};
+console.log("getData(): ", getData());
+
+// const getData2 = () => {
+//   const data = fetch("db.json");
+//   if (data.ok) {
+//     return data.json();
+//   }
+// };
+// console.log("getData2(): ", getData2());// undefined
+
+const getGoods = (callback) => {
+  getData()
+    .then((data) => {
+      callback(data);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
+getGoods((data) => {
+  console.warn(data);
 });
